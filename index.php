@@ -1,7 +1,10 @@
 <?php
-
-	function add_employee($id = null){
-	if(isset($id)){
+    error_reporting(0);
+	include_once"conn.php";
+	$click = $_GET['click'];
+	
+	function employee($id = null){
+	 if(isset($id)){
 		$sql =mysql_query("SELECT * FROM employee WHERE id = $id");
 		$fname= mysql_result($sql,0,1);
 		$oname= mysql_result($sql,0,2);
@@ -10,8 +13,113 @@
 		$country= mysql_result($sql,0,5);
 		$email= mysql_result($sql,0,6);
 		$phone= mysql_result($sql,0,7);
-		}
-	}
+		}//end if
+		
+		echo" <form id='form' name='form' method='post' action='index.php'>
+		<tr>
+    <td colspan='3'>
+      First Name *
+       </td>    
+       <td colspan='3'>
+      <input type='text' name='fname' id='fname' value='$fname'/>
+       </td>
+  </tr>
+   <tr>
+    <td colspan='3'>
+      Other names
+      </td>    
+      <td colspan='3'>
+     <input type='text' name='oname' id='oname' value='$oname' />
+      </td>
+      </tr>
+       <tr>
+    <td colspan='3'>
+      Box 
+      </td>    
+      <td colspan='3'>
+     <input type='text' name='box' id='box' value='$box' />
+      </td>
+      </tr>
+       <tr>
+    <td colspan='3'>
+      Town
+      </td>    
+      <td colspan='3'>
+     <input type='text' name='town' id='town' value='$town' />
+      </td>
+      </tr>
+       <tr>
+    <td colspan='3'>
+      Country
+      </td>
+    <td colspan='3'>
+      <input type='text' name='country' id='country' value='$country'  />
+      </td>
+      </tr>
+       <tr>
+    <td colspan='3'>
+      E-mail      </td>    
+      <td colspan='3'>
+  <input type='text' name='email' id='email' value='$email' />
+      </td>
+      </tr>
+       <tr>
+    <td colspan='3'>
+      Phone
+      </td>    
+      <td colspan='3'>
+      <input type='text' name='phone' id='phone' value='$phone' />
+      </td>
+      </tr>
+       <tr>
+    <td colspan='6'>
+    <input name='submit' type='submit' id='submit' value='Submit'  />
+    </td>
+	</tr>
+    </form>";
+	}// end function
+	
+	function view(){
+		$sql= mysql_query('SELECT * FROM employee');
+		
+		 if(mysql_num_rows($sql)>0){
+			while($row = mysql_fetch_array($sql)){
+				
+	    $fname= $row['fname'];
+		$oname= $row['oname'];
+		$box= $row['box'];
+		$town= $row['town'];
+		$country= $row['country'];
+		$email= $row['email'];
+		$phone= $row['phone'];
+				
+				echo "<tr>
+					<td>$fname</td>
+					<td>$oname</td>
+					<td>$box</td>
+					<td>$town</td>
+					 <td>$country</td>
+					 <td>$email</td>
+					 <td>$phone</td>
+					 </tr>";
+				}//end while
+			}// end if
+		}//end function
+	
+	if(!empty($_POST['fname'])){
+		$fname = $_POST['fname'];
+		$oname = $_POST['oname'];
+		$box = $_POST['box'];
+		$town = $_POST['town'];
+		$country = $_POST['country'];
+		$email = $_POST['email'];
+		$phone = $_POST['phone'];
+		
+		mysql_query("INSERT INTO `employee_db`.`employee` (`id`, `fname`, `oname`, `box`, `town`, `country`, `email`, `phone`) VALUES (NULL, '$fname', '$oname', '$box', '$town', '$country', '$email', '$phone')");
+	
+		header('Location: http://localhost/employee/index.php?click=view');
+		
+	}// end if
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -24,74 +132,21 @@
 <table width="200" border="1" align="center">
   <tr>
     <td><a href="?click=add">Add</a></td>
-    <td><a href="?click=update_employee">Update Employee</a></td>
-    <td><a href="?click=update_address">Update Address</a></td>
-    <td><a href="?click=update_email">Update E-mail</a></td>
+    <td><a href="?click=update">Update Employee</a></td>
+    <td><a href="?click=update">Update Address</a></td>
+    <td><a href="?click=update">Update E-mail</a></td>
     <td><a href="?click=delete">Delete</a></td>
     <td><a href="?click=view">View</a></td>
   </tr>
-  <form id="form1" name="form1" method="post" action="">
-  <tr>
-    <td colspan="3">
-      First Name *
-       </td>    
-       <td colspan="3">
-      <input type="text" name="fname" id="fname" />
-       </td>
-  </tr>
-   <tr>
-    <td colspan="3">
-      Other names
-      </td>    
-      <td colspan="3">
-     <input type="text" name="oname" id="oname" />
-      </td>
-      </tr>
-       <tr>
-    <td colspan="3">
-      Box 
-      </td>    
-      <td colspan="3">
-     <input type="text" name="box" id="box" />
-      </td>
-      </tr>
-       <tr>
-    <td colspan="3">
-      Town
-      </td>    
-      <td colspan="3">
-     <input type="text" name="town" id="town" />
-      </td>
-      </tr>
-       <tr>
-    <td colspan="3">
-      Country
-      </td>
-    <td colspan="3">
-      <input type="text" name="country" id="country" />
-      </td>
-      </tr>
-       <tr>
-    <td colspan="3">
-      E-mail      </td>    
-      <td colspan="3">
-  <input type="text" name="email" id="email" />
-      </td>
-      </tr>
-       <tr>
-    <td colspan="3">
-      Phone
-      </td>    
-      <td colspan="3">
-      <input type="text" name="phone" id="phone" />
-      </td>
-      </tr>
-       <tr>
-    <td colspan="6">
-    <input name="submit" type="submit" id="submit" value="Submit"  />
-    </td>
-  </tr>
-  </form>
+  <?php
+  if($click == "add"){
+	  employee();
+	  }
+	  
+  if($click == "view"){
+	  view();
+		}
+  ?>
 </table>
 </body>
 </html>
