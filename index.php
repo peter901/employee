@@ -2,7 +2,14 @@
 
 	function add_employee($id = null){
 	if(isset($id)){
-		$sql =mysql_query("SELECT * FROM employee");
+		$sql =mysql_query("SELECT * FROM employee WHERE id = $id");
+		$fname= mysql_result($sql,0,1);
+		$oname= mysql_result($sql,0,2);
+		$box= mysql_result($sql,0,3);
+		$town= mysql_result($sql,0,4);
+		$country= mysql_result($sql,0,5);
+		$email= mysql_result($sql,0,6);
+		$phone= mysql_result($sql,0,7);
 		}
 	}
 ?>
