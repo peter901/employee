@@ -3,7 +3,7 @@
 	include_once"conn.php";
 	$click = $_GET['click'];
 	
-	function employee($id = null){
+	function employee($id = null, $click = 'add'){
 	 if(isset($id)){
 		$sql =mysql_query("SELECT * FROM employee WHERE id = $id");
 		$fname= mysql_result($sql,0,1);
@@ -14,69 +14,85 @@
 		$email= mysql_result($sql,0,6);
 		$phone= mysql_result($sql,0,7);
 		}//end if
-		
-		echo" <form id='form' name='form' method='post' action='index.php'>
-		<tr>
-    <td colspan='3'>
-      First Name *
-       </td>    
-       <td colspan='3'>
-      <input type='text' name='fname' id='fname' value='$fname'/>
-       </td>
-  </tr>
-   <tr>
-    <td colspan='3'>
-      Other names
-      </td>    
-      <td colspan='3'>
-     <input type='text' name='oname' id='oname' value='$oname' />
-      </td>
-      </tr>
-       <tr>
-    <td colspan='3'>
-      Box 
-      </td>    
-      <td colspan='3'>
-     <input type='text' name='box' id='box' value='$box' />
-      </td>
-      </tr>
-       <tr>
-    <td colspan='3'>
-      Town
-      </td>    
-      <td colspan='3'>
-     <input type='text' name='town' id='town' value='$town' />
-      </td>
-      </tr>
-       <tr>
-    <td colspan='3'>
-      Country
-      </td>
-    <td colspan='3'>
-      <input type='text' name='country' id='country' value='$country'  />
-      </td>
-      </tr>
-       <tr>
-    <td colspan='3'>
-      E-mail      </td>    
-      <td colspan='3'>
-  <input type='text' name='email' id='email' value='$email' />
-      </td>
-      </tr>
-       <tr>
-    <td colspan='3'>
-      Phone
-      </td>    
-      <td colspan='3'>
-      <input type='text' name='phone' id='phone' value='$phone' />
-      </td>
-      </tr>
-       <tr>
-    <td colspan='6'>
-    <input name='submit' type='submit' id='submit' value='Submit'  />
-    </td>
-	</tr>
-    </form>";
+		?> 
+        <form id='form' name='form' method='post' action='index.php'>
+		<?php if($click=="add" || $click=="update_employee"){?>
+        <tr>
+    		<td colspan='3'>
+      		First Name *
+       		</td>    
+      		<td colspan='3'>
+      		<input type='text' name='fname' id='fname' value='<?php echo $fname?>'/>
+       		</td>
+  		</tr>
+   		
+        <tr>
+    		<td colspan='3'>
+      		Other names
+      		</td>    
+      		<td colspan='3'>
+     		<input type='text' name='oname' id='oname' value='<?php echo $oname?>' />
+      		</td>
+      	</tr>
+        <?php }//end if
+		if($click=="add" || $click=="update_employee" || $click=="update_address"){
+		?>
+        
+       	<tr>
+    		<td colspan='3'>
+      		Box 
+      		</td>    
+      		<td colspan='3'>
+     		<input type='text' name='box' id='box' value='<?php echo $box?>' />
+      		</td>
+      	</tr>
+      	<tr>
+    		<td colspan='3'>
+      		Town
+      		</td>    
+      		<td colspan='3'>
+     		<input type='text' name='town' id='town' value='<?php echo $town?>' />
+      		</td>
+      	</tr>
+       	<tr>
+    		<td colspan='3'>
+      		Country
+      		</td>
+    		<td colspan='3'>
+      		<input type='text' name='country' id='country' value='<?php echo $country?>'  />
+      		</td>
+      	</tr>
+        <?php }// end if 
+		if ($click=="add" || $click=="update_employee" || $click=="update_address" || $click=="update_email" ){
+		?>
+       	<tr>
+    		<td colspan='3'>
+      		E-mail      
+            </td>    
+      		<td colspan='3'>
+  			<input type='text' name='email' id='email' value='<?php echo $email?>' />
+      		</td>
+      	</tr>
+        <?php } //end if 
+		if($click=="add" || $click=="update_employee" || $click=="update_address"){
+		?>
+       	<tr>
+    		<td colspan='3'>
+      		Phone
+      		</td>    
+      		<td colspan='3'>
+      		<input type='text' name='phone' id='phone' value='<?php echo $phone?>' />
+      		</td>
+      	</tr>
+        <?php }//end if ?>
+       	<tr>
+    		<td colspan='6'>
+    		<input name='submit' type='submit' id='submit' value='Submit'  />
+    		</td>
+			</tr>
+    </form>
+	
+	<?php
 	}// end function
 	
 	function view(){
@@ -132,15 +148,27 @@
 <table width="200" border="1" align="center">
   <tr>
     <td><a href="?click=add">Add</a></td>
-    <td><a href="?click=update">Update Employee</a></td>
-    <td><a href="?click=update">Update Address</a></td>
-    <td><a href="?click=update">Update E-mail</a></td>
+    <td><a href="?click=update_employee">Update Employee</a></td>
+    <td><a href="?click=update_address">Update Address</a></td>
+    <td><a href="?click=update_email">Update E-mail</a></td>
     <td><a href="?click=delete">Delete</a></td>
     <td><a href="?click=view">View</a></td>
   </tr>
   <?php
-  if($click == "add"){
+  	 if($click == "add"){
 	  employee();
+	  }
+	  
+	 if($click == "update_employee"){
+	  employee(null,$click);
+	  }
+	  
+	  if($click == "update_address"){
+	  employee(null,$click);
+	  }
+	  
+	  if($click == "update_email"){
+	  employee(null,$click);
 	  }
 	  
   if($click == "view"){
