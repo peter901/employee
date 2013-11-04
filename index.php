@@ -2,8 +2,9 @@
     error_reporting(0);
 	include_once"conn.php";
 	$click = $_GET['click'];
+	$id =$_GET['employee_id'];
 	
-	function employee($id = null, $click = 'add'){
+function employee($id = null, $click = 'add'){
 	 if(isset($id)){
 		$sql =mysql_query("SELECT * FROM employee WHERE id = $id");
 		$fname= mysql_result($sql,0,1);
@@ -15,8 +16,14 @@
 		$phone= mysql_result($sql,0,7);
 		}//end if
 		?> 
-        <form id='form' name='form' method='post' action='index.php'>
-		<?php if($click=="add" || $click=="update_employee"){?>
+        <form id='form' name='form' method='post' action='index.php?click=<?php echo $click?>'>
+        <input name="id" type="hidden" value="<?php echo $id; ?>" />
+        <?php 
+		if ($click=="add" || $click=="update_employee" || $click=="update_address" || $click=="update_email" ){
+		?>
+        <input name="fname" type="hidden" value="<?php echo $fname; ?>" />
+        
+		<?php } if($click=="add" || $click=="update_employee"){?>
         <tr>
     		<td colspan='3'>
       		First Name *
@@ -94,8 +101,44 @@
 	
 	<?php
 	}// end function
+
+function update($click){
+		$sql =mysql_query("SELECT * FROM employee");
+		if(mysql_num_rows($sql)>0){
+			while($row = mysql_fetch_array($sql)){
+				$employee_id .= "<option value='$row[id]'> $row[id] $row[fname]</option>";
+					}//end while
+			}//end if  ?> 
+            
+             
+   		<form id="form1" name="form1" method="get" action="index.php?click=<?php echo $click?>">
+        <input name="click" type="hidden" value="<?php echo $click?>" />
+  			<tr>
+    			<td colspan="6">Select Employee ID</td>
+  			</tr>
+  			<tr>
+     			<td colspan="3">
+    			Employee id
+      			</td>
+    			<td colspan="3">
+      			<select name="employee_id" id="employee_id">
+      			<?php 
+     			echo $employee_id;
+	  			?>
+      			</select>
+      			</td>
+  			</tr>
+            <tr>
+                <td colspan="6">
+                <input name="Submit" type="submit" value="Submit" />
+                </td>
+            </tr>
+		</form>
+<?php					
+			
+	}// end function
 	
-	function view(){
+function view(){
 		$sql= mysql_query('SELECT * FROM employee');
 		
 		 if(mysql_num_rows($sql)>0){
@@ -122,7 +165,8 @@
 			}// end if
 		}//end function
 	
-	if(!empty($_POST['fname'])){
+if(!empty($_POST['fname'])){
+		$id = $_POST['id'];
 		$fname = $_POST['fname'];
 		$oname = $_POST['oname'];
 		$box = $_POST['box'];
@@ -131,12 +175,29 @@
 		$email = $_POST['email'];
 		$phone = $_POST['phone'];
 		
+		if($click == 'add'){
 		mysql_query("INSERT INTO `employee_db`.`employee` (`id`, `fname`, `oname`, `box`, `town`, `country`, `email`, `phone`) VALUES (NULL, '$fname', '$oname', '$box', '$town', '$country', '$email', '$phone')");
-	
+		}
+		
+		if($click == "update_employee"){
+			mysql_query("UPDATE `employee_db`.`employee` SET `fname` = '$fname',`oname` = '$oname',`box` = '$box',`town` = '$town',
+`country` = '$country',`email` = '$email',`phone` = '$phone' WHERE `employee`.`id` =$id;");
+			}
+			
+		if($click == "update_address"){
+			mysql_query("UPDATE `employee_db`.`employee` SET ,`box` = '$box',`town` = '$town',
+`country` = '$country',`email` = '$email',`phone` = '$phone' WHERE `employee`.`id` =$id;");
+			}
+			
+		if( $click == "update_email"){
+			mysql_query("UPDATE `employee_db`.`employee` SET `email` = '$email' WHERE `employee`.`id` =$id;");
+			}
+			
 		header('Location: http://localhost/employee/index.php?click=view');
 		
 	}// end if
 ?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -159,21 +220,25 @@
 	  employee();
 	  }
 	  
-	 if($click == "update_employee"){
-	  employee(null,$click);
+	 if($click == "update_employee" && empty($id)){
+	  update($click);
+	  }	 
+	  
+	  if($click == "update_address" && empty($id)){
+	  update($click);
+	  }	 
+	  
+	  if($click == "update_email" && empty($id)){
+	  update($click);
 	  }
 	  
-	  if($click == "update_address"){
-	  employee(null,$click);
-	  }
+	  if(!empty($id) && ($click == "update_employee" || $click == "update_address" || $click == "update_email")){
+	   employee($id , $click);
+	   }
 	  
-	  if($click == "update_email"){
-	  employee(null,$click);
-	  }
-	  
-  if($click == "view"){
-	  view();
-		}
+  	 if($click == "view"){
+	   view();
+	   }
   ?>
 </table>
 </body>
