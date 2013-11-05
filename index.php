@@ -5,6 +5,13 @@
 	$id =$_GET['employee_id'];
 	
 function employee($id = null, $click = 'add'){
+	
+	if($click == 'delete'){
+		$sql =mysql_query("DELETE FROM employee WHERE id = $id");
+		header('Location: http://localhost/employee/index.php?click=view');
+		exit;
+		}
+		
 	 if(isset($id)){
 		$sql =mysql_query("SELECT * FROM employee WHERE id = $id");
 		$fname= mysql_result($sql,0,1);
@@ -105,12 +112,11 @@ function employee($id = null, $click = 'add'){
 function update($click){
 		$sql =mysql_query("SELECT * FROM employee");
 		if(mysql_num_rows($sql)>0){
+				$employee_id = "<option value=''> Select Employee Id</option>";
 			while($row = mysql_fetch_array($sql)){
-				$employee_id .= "<option value='$row[id]'> $row[id] $row[fname]</option>";
+				$employee_id .= "<option value='$row[id]'> $row[id].$row[fname] $row[oname]</option>";
 					}//end while
 			}//end if  ?> 
-            
-             
    		<form id="form1" name="form1" method="get" action="index.php?click=<?php echo $click?>">
         <input name="click" type="hidden" value="<?php echo $click?>" />
   			<tr>
@@ -135,8 +141,7 @@ function update($click){
             </tr>
 		</form>
 <?php					
-			
-	}// end function
+}// end function
 	
 function view(){
 		$sql= mysql_query('SELECT * FROM employee');
@@ -163,8 +168,9 @@ function view(){
 					 </tr>";
 				}//end while
 			}// end if
-		}//end function
-	
+}//end function
+
+// posting data	
 if(!empty($_POST['fname'])){
 		$id = $_POST['id'];
 		$fname = $_POST['fname'];
@@ -232,7 +238,11 @@ if(!empty($_POST['fname'])){
 	  update($click);
 	  }
 	  
-	  if(!empty($id) && ($click == "update_employee" || $click == "update_address" || $click == "update_email")){
+	  if($click == "delete" && empty($id)){
+	  update($click);
+	  }
+	  
+	  if(!empty($id) && ($click == "update_employee" || $click == "update_address" || $click == "update_email" || $click == "delete")){
 	   employee($id , $click);
 	   }
 	  
