@@ -24,11 +24,11 @@ function employee($id = null, $click = 'add'){
 		}//end if
 		?> 
         <form id='form' name='form' method='post' action='index.php?click=<?php echo $click?>'>
-        <input name="id" type="hidden" value="<?php echo $id; ?>" />
+        <input name='id' type='hidden' value='<?php echo $id; ?>' />
         <?php 
 		if ($click=="add" || $click=="update_employee" || $click=="update_address" || $click=="update_email" ){
 		?>
-        <input name="fname" type="hidden" value="<?php echo $fname; ?>" />
+        <input name='fname' type='hidden' value='<?php echo $fname; ?>' />
         
 		<?php } if($click=="add" || $click=="update_employee"){?>
         <tr>
@@ -191,7 +191,7 @@ if(!empty($_POST['fname'])){
 			}
 			
 		if($click == "update_address"){
-			mysql_query("UPDATE `employee_db`.`employee` SET ,`box` = '$box',`town` = '$town',
+			mysql_query("UPDATE `employee_db`.`employee` SET `box` = '$box',`town` = '$town',
 `country` = '$country',`email` = '$email',`phone` = '$phone' WHERE `employee`.`id` =$id;");
 			}
 			
