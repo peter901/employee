@@ -8,7 +8,7 @@
 		$click = $required_form;
 	}
 	$submit = $_POST['submit'];
-
+//added a  comment and a reqadafa
 
 function employee($id = null, $click = 'add'){
 	
